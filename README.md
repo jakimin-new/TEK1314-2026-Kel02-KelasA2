@@ -1,5 +1,13 @@
 # Proyek Simulasi Jaringan - Cyber Range
 
+## Anggota Kelompok 2 Kelas A
+1. Dzaky Naufal Putra 
+Raditio (J0404241020) as Blue Team
+2. Siti Syafa Laela (J0404241053) as Lead
+3. Gde Saputra 
+Pramana Artha(J0404241107) as Red Team
+4. Muhamad Arif Dermawan (J0404241134) as Red Team
+
 ## Deskripsi Skenario
 
 Skenario yang dipilih adalah **Web & Service Exploitation (DVWA + SSH Brute Force)**.
