@@ -5,7 +5,7 @@
 Raditio (J0404241020) as Blue Team
 2. Siti Syafa Laela (J0404241053) as Lead
 3. Gde Saputra 
-Pramana Artha(J0404241107) as Red Team
+Pramana Artha(J0404241107) as Blue Team
 4. Muhamad Arif Dermawan (J0404241134) as Red Team
 
 ## Deskripsi Skenario
