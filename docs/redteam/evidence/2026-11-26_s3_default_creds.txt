@@ -1,0 +1,14 @@
+Uji kredensial default ThingsBoard via halaman login :9090
+[kali attacker, 2026-11-26]
+
+Kredensial diuji (login dashboard, 1-2 percobaan per akun):
+- sysadmin@thingsboard.org / sysadmin
+- tenant@thingsboard.org / tenant
+- customer@thingsboard.org / customer
+
+Respons server:
+Invalid username or password
+
+KESIMPULAN: kredensial default ThingsBoard SUDAH DIGANTI oleh Blue Team.
+Vektor akses via akun bawaan tertutup — kontrol hardening kategori A
+(hapus kredensial default) terverifikasi bekerja.

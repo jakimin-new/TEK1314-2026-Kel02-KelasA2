@@ -1,0 +1,38 @@
+Swagger UI ter-expose — hasil enumerasi dari screenshot (dump/ss/1..12)
+[kali attacker, 2026-11-26 12:32-12:35 +0700]
+
+URL: http://172.20.4.2:9090/swagger-ui/index.html (akses publik tanpa login)
+
+★ INFORMASI TERPENTING:
+- Judul halaman: "ThingsBoard REST API"
+- ★★ VERSI TERBONGKAR: 4.2.1.1 (badge di Swagger) — langsung membatalkan CVE-2025-34281
+  (stored XSS Image Gallery, fixed di 4.2.1) karena target sudah >= 4.2.1.
+- Spec path: /v3/api-docs/thingsboard (OAS 3.1)
+- Server: http://172.20.4.2:9090 (generated)
+
+GRUP ENDPOINT YANG TEREKAM (urut abjad, dari ss 1-12):
+- admin-controller (jwtSettings, securitySettings, repositorySettings, mail oauth2, systemInfo, updates)
+- ai-model-controller (saveAiModel, sendChatRequest)
+- alarm-controller + alarm-comment-controller
+- asset-controller + asset-profile-controller
+- audit-log-controller
+- auth-controller
+- calculated-field-controller
+- component-descriptor-controller
+- customer-controller (mulai terlihat di ss 12)
+[daftar belum lengkap — abjad belum selesai: device, dashboard, edge, telemetry, tenant, user, dll.]
+
+STATUS KUNCI:
+- Hampir semua endpoint TERKUNCI (perlu JWT).
+- TIDAK TERKUNCI (publik):
+  * /api/noauth/activate, /api/noauth/activate{?sendActivationMail}
+  * /api/noauth/resetPassword, /api/noauth/resetPassword{?resetToken}
+  * /api/noauth/resetPasswordByEmail
+  * /api/noauth/userPasswordPolicy  ← bocor kebijakan password (bahan perencanaan brute-force)
+  * /api/asset/types (deprecated, tanpa gembok)
+
+KESIMPULAN:
+1. Swagger UI publik = peta lengkap permukaan API untuk penyerang (information disclosure, kategori C).
+2. Versi 4.2.1.1 terbaca publik → recon gratis untuk cek CVE lain.
+3. Endpoint /api/noauth/* layak diuji satu per satu (password policy, aktivasi, reset).
+4. Semua endpoint sensitif (admin, audit log, JWT settings) terkunci auth — kontrol bekerja.

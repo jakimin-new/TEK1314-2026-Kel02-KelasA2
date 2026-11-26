@@ -1,0 +1,67 @@
+curl -i http://172.20.4.2:80
+[kali attacker, 2026-11-26 11:51 +0700]
+
+HTTP/1.1 200 
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Last-Modified: Tue, 23 Dec 2025 09:08:14 GMT
+Accept-Ranges: bytes
+Content-Type: text/html;charset=UTF-8
+Content-Language: en
+Content-Length: 3776
+Date: Thu, 26 Nov 2026 04:51:43 GMT
+
+<!--
+    Copyright © 2016-2025 The Thingsboard Authors
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+        http://www.apache.org/licenses/LICENSE-2.0
+-->
+<!doctype html>
+<html lang="en" style="width: 100%; height: 100%;">
+<head>
+  <meta charset="utf-8">
+  <title>ThingsBoard</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="thingsboard.ico">
+  <link rel="preload" href="assets/fonts/MaterialIcons-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous"/>
+  <link rel="preload" href="assets/fonts/MaterialIconsRound-Regular.otf" as="font" type="font/otf" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="assets/fonts/material-icons.css"/>
+  <style type="text/css">
+    body, html { height: 100%; overflow: hidden; background-color: #eee; }
+    .tb-loading-spinner { margin: auto; z-index: 1; position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 136px; height: 30px; text-align: center; }
+    .tb-loading-spinner > div { width: 30px; height: 30px; margin-right: 10px; background-color: rgb(43,160,199); border-radius: 100%; display: inline-block; -webkit-animation: tb-bouncedelay 1.4s infinite ease-in-out both; animation: tb-bouncedelay 1.4s infinite ease-in-out both; }
+  </style>
+<link rel="stylesheet" href="styles-H63CV44O.css"></head>
+<body class="tb-default">
+  <tb-root></tb-root>
+  <div id="tb-loading-spinner" class="tb-loading-spinner">
+    <div class="tb-bounce1"></div>
+    <div class="tb-bounce2"></div>
+    <div class="tb-bounce3"></div>
+  </div>
+<link rel="modulepreload" href="chunk-ZXUOWV3T.js"><link rel="modulepreload" href="chunk-RWATQY5J.js"><link rel="modulepreload" href="chunk-H2MN5S2H.js"><link rel="modulepreload" href="chunk-U77NLLHW.js"><link rel="modulepreload" href="chunk-26INSIJD.js"><link rel="modulepreload" href="chunk-MQ2QOMQV.js"><link rel="modulepreload" href="chunk-ZIOZDG6Q.js"><link rel="modulepreload" href="chunk-NNFEA6D6.js"><link rel="modulepreload" href="chunk-HAPUDHDK.js"><script src="polyfills-5W6QH7SK.js" type="module"></script><script src="scripts-7CEY7UXU.js" defer></script><script src="main-PX5LRNAA.js" type="module"></script></body>
+</html>
+
+===
+
+curl -i http://172.20.4.2:9090
+[kali attacker, 2026-11-26 11:52 +0700]
+
+HTTP/1.1 200 
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Last-Modified: Tue, 23 Dec 2025 09:08:14 GMT
+Accept-Ranges: bytes
+Content-Type: text/html;charset=UTF-8
+Content-Language: en
+Content-Length: 3776
+Date: Thu, 26 Nov 2026 04:52:05 GMT
+
+<!-- halaman ThingsBoard identik dengan respons :80 (Copyright 2016-2025, title ThingsBoard, build styles-H63CV44O.css, main-PX5LRNAA.js) -->
+
+KESIMPULAN: :80 dan :9090 menyajikan aplikasi ThingsBoard yang identik (HTTP 200, header sama, body sama).

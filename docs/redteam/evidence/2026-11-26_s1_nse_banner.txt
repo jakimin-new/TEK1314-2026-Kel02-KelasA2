@@ -1,0 +1,32 @@
+nmap -Pn --script=banner,http-headers,http-methods -p 80,2245,5432,9090 172.20.4.2
+[kali attacker, 2026-11-26 11:53 +0700]
+
+Starting Nmap 7.991 ( https://nmap.org ) at 2026-11-26 11:53 +0700
+Nmap scan report for 172.20.4.2
+Host is up (0.11s latency).
+
+PORT     STATE SERVICE
+80/tcp   open  http
+| http-headers:
+|   Vary: Origin
+|   Vary: Access-Control-Request-Method
+|   Vary: Access-Control-Request-Headers
+|   Last-Modified: Tue, 23 Dec 2025 09:08:14 GMT
+|   Accept-Ranges: bytes
+|   Content-Type: text/html;charset=UTF-8
+|   Content-Language: en
+|   Content-Length: 3776
+|   Date: Thu, 26 Nov 2026 04:53:52 GMT
+|   Connection: close
+|
+|_  (Request type: HEAD)
+| http-methods:
+|_  Supported Methods: GET HEAD OPTIONS
+2245/tcp open  hao
+|_banner: SSH-2.0-OpenSSH_10.0p2 Debian-7+deb13u4
+5432/tcp open  postgresql
+9090/tcp open  zeus-admin
+
+Nmap done: 1 IP address (1 host up) scanned in 11.78 seconds
+
+CATATAN: header respons :80 tidak menampilkan X-Frame-Options maupun X-Content-Type-Options — konsisten dengan temuan Nikto.

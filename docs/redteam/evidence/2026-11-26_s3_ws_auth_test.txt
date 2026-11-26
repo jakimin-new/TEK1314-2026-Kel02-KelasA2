@@ -1,0 +1,30 @@
+Uji WebSocket telemetry dengan klien sungguhan
+[kali attacker, 2026-11-26, venv myenv + websockets 17.4]
+
+Setup:
+  python3 -m venv myenv && pip install websockets  (17.4)
+
+Script ws_test.py:
+  import asyncio, websockets, json
+  async def main():
+      async with websockets.connect("ws://172.20.4.2:9090/api/ws/plugins/telemetry") as ws:
+          sub = {"tsSubCmds":[{"entityType":"DEVICE","entityId":"00000000-0000-0000-0000-000000000000","cmdId":1,"scope":"LATEST_TELEMETRY"}],"historyCmds":[],"attrSubCmds":[]}
+          await ws.send(json.dumps(sub))
+          try:
+              print(await asyncio.wait_for(ws.recv(), timeout=8))
+          except asyncio.TimeoutError:
+              print("TIMEOUT — koneksi hidup tapi tidak kirim data tanpa auth")
+  asyncio.run(main())
+
+Hasil:
+  websockets.exceptions.ConnectionClosedError:
+  received 1008 (policy violation) Auth cmd is missing;
+  then sent 1008 (policy violation) Auth cmd is missing
+
+KESIMPULAN:
+★ Vektor WS TERTUTUP: handshake 101 memang diterima tanpa auth, tapi begitu klien
+  mencoba subscribe telemetry TANPA perintah AUTH, server langsung menutup koneksi
+  dengan kode 1008 "Auth cmd is missing".
+→ Tidak ada akses telemetry tanpa kredensial. Temuan "101 tanpa auth" pada evidence
+  sebelumnya DOWNGRADE menjadi: handshake terbuka namun data terproteksi auth —
+  aman untuk Blue Team (port WS tidak perlu dibuka lebih lanjut selama AUTH wajib).

@@ -1,0 +1,36 @@
+Uji endpoint noauth lanjutan + WS + actuator
+[kali attacker, 2026-11-26 12:46-12:47 +0700]
+
+POST /api/noauth/resetPasswordByEmail {"email":"tenant@thingsboard.org"}
+→ HTTP/1.1 200, Content-Length: 0 (respons kosong seragam)
++ POSITIF: tidak membocorkan ada/tidaknya email (anti-enumeration baik).
+- CATATAN: hanya 1x percobaan — rate-limit belum terbukti ada/tidak; 200 langsung tanpa
+  delay menandakan tidak ada throttle terlihat.
+
+GET /api/noauth/activate?activateToken=foobar → HTTP/1.1 409 (Content-Length: 0)
+GET /api/noauth/resetPassword?resetToken=foobar → HTTP/1.1 409
+GET /api/noauth/activate?activateToken=foo&sendActivationMail=false → HTTP/1.1 409
++ POSITIF: respons token invalid seragam (409 kosong) — tidak ada enumerasi token valid/invalid.
+
+WS handshake: curl -H "Connection: Upgrade" ... /api/ws/plugins/telemetry
+→ HTTP/1.1 101 Switching Protocols, Upgrade: websocket,
+  Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+★ TEMUAN: handshake WebSocket telemetry DITERIMA TANPA AUTENTIKASI (101).
+  curl timeout setelahnya = koneksi terbuka menunggu frame (tidak di-drop server).
+  Pertanyaan lanjutan: apakah langganan data butuh token di frame pertama, atau bisa
+  subscribe telemetry device tanpa kredensial → perlu klien WS sungguhan untuk uji.
+
+GET /actuator
+→ HTTP/1.1 200, Content-Type: application/vnd.springboot.actuator.v3+json
+  {"_links":{"self":{...},"info":{"href":"/actuator/info"}}}
+★ TEMUAN KECIL: Spring Boot Actuator TER-EXPOSE terbatas (hanya link `self` + `info`).
+  Tidak ada /env, /heapdump, /mappings → exposure minimal, tapi tetap sebaiknya ditutup.
+
+GET /actuator/health
+→ 200 tapi isi = SPA ThingsBoard catch-all (BUKAN health asli). /actuator/health dimask frontend.
+
+KESIMPULAN:
+1. ★ WS /api/ws/plugins/telemetry menerima handshake tanpa auth — uji klien WS lanjutan.
+2. ★ /actuator terekspos terbatas — cek /actuator/info, rekomendasi tutup endpoint manajemen.
+3. + Token endpoints (activate/reset) respons seragam — aman dari enumerasi.
+4. + resetPasswordByEmail tidak bocor validitas email — aman dari enumerasi user.

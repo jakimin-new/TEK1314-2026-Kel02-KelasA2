@@ -1,0 +1,37 @@
+sudo nmap -Pn -sS -sV -O -p- 172.20.4.2 -oN s1-fullscan.txt
+[kali attacker, 2026-11-26 11:36 +0700]
+
+Stats: 0:00:33 elapsed; 0 hosts completed (1 up), 1 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 8.29% done; ETC: 11:43 (0:05:52 remaining)
+Stats: 0:01:26 elapsed; SYN Stealth Scan Timing: About 22.86% done
+Stats: 0:02:16 elapsed; SYN Stealth Scan Timing: About 35.18% done
+Stats: 0:04:06 elapsed; SYN Stealth Scan Timing: About 44.90% done
+Stats: 0:05:37 elapsed; SYN Stealth Scan Timing: About 50.86% done
+Stats: 0:06:54 elapsed; SYN Stealth Scan Timing: About 59.40% done
+Stats: 0:07:16 elapsed; SYN Stealth Scan Timing: About 60.31% done
+Stats: 0:11:35 elapsed; SYN Stealth Scan Timing: About 65.43% done; ETC: 11:53 (0:05:43 remaining)
+
+Starting Nmap 7.991 ( https://nmap.org ) at 2026-11-26 11:36 +0700
+Nmap scan report for 172.20.4.2
+Host is up (0.10s latency).
+Not shown: 65531 filtered tcp ports (no-response)
+PORT     STATE SERVICE    VERSION
+80/tcp   open  http       Apache Tomcat (language: en)
+2245/tcp open  ssh        OpenSSH 10.0p2 Debian 7+deb13u4 (protocol 2.0)
+5432/tcp open  postgresql PostgreSQL DB
+9090/tcp open  http       Apache Tomcat (language: en)
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port5432-TCP:V=7.991%I=7%D=11/26%Time=6B07BA64%P=x86_64-pc-linux-gnu%r(
+SF:SMBProgNeg,90,"E\0\0\0\x8fSFATAL\0VFATAL\0C0A000\0Munsupported\x20front
+SF:end\x20protocol\x2065363\.19778:\x20server\x20supports\x203\.0\x20to\x2
+SF:03\.2\0Fbackend_startup\.c\0L731\0RProcessStartupPacket\0\0")%r(Kerbero
+SF:s,90,"E\0\0\0\x8fSFATAL\0VFATAL\0C0A000\0Munsupported\x20frontend\x20pr
+SF:otocol\x2027265\.28208:\x20server\x20supports\x203\.0\x20to\x203\.2\0Fb
+SF:ackend_startup\.c\0L731\0RProcessStartupPacket\0\0");
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Aggressive OS guesses: Linux 4.15 - 5.19 (91%), Linux 4.19 (91%), Linux 5.0 - 5.14 (91%), Linux 5.4 - 5.10 (91%), OpenWrt 21.02 (Linux 5.4) (91%), MikroTik RouterOS 7.2 - 7.5 (Linux 5.6.3) (91%), Linux 4.10 (91%), Linux 6.0 (90%), Linux 6.15 (88%), Crestron XPanel control system (86%)
+No exact OS matches for host (test conditions non-ideal).
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+OS and Service detection performed. Please report any incorrect results to https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 795.43 seconds

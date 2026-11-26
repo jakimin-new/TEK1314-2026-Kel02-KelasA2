@@ -1,0 +1,56 @@
+=== BATCH A — Web deeper (curl + method enum) ===
+[kali attacker, 2026-11-26 12:24-12:25 +0700]
+
+curl -i https://172.20.4.2:9090 --max-time 5
+→ curl: (35) GnuTLS, handshake failed: An unexpected TLS packet was received.
+★ TEMUAN KRITIS: TIDAK ADA TLS. Login dashboard berjalan di HTTP plaintext.
+
+curl -i http://172.20.4.2:9090/swagger-ui.html
+→ HTTP/1.1 302, Location: /swagger-ui/index.html
+★ TEMUAN: Swagger UI ter-expose — endpoint dokumentasi API mengarah ke /swagger-ui/index.html (perlu konfirmasi isi).
+
+curl -i http://172.20.4.2:9090/v2/api-docs
+→ HTTP/1.1 200 tapi isi = halaman SPA ThingsBoard (catch-all frontend), bukan API docs.
+
+curl -i http://172.20.4.2:9090/doc.html
+→ HTTP/1.1 404, {"message":"No static resource doc.html.","errorCode":32,"status":404}
+Catatan header: respons JSON ini TANPA security headers.
+
+curl -i http://172.20.4.2:9090/api/v1/telemetry
+→ HTTP/1.1 404, {"message":"No static resource api/v1/telemetry.","errorCode":32,"status":404}
+★ Header respons API: X-Content-Type-Options: nosniff, X-XSS-Protection: 0,
+  Cache-Control: no-cache/no-store, X-Frame-Options: DENY → security headers ADA di layer API (Spring),
+  TIDAK ADA di layer static frontend (Temuan Nikto tetap valid untuk halaman utama).
+
+curl -i http://172.20.4.2:9090/api/auth/user
+→ HTTP/1.1 401, {"status":401,"message":"Authentication failed","errorCode":10}
+→ Endpoint API terproteksi auth. Bagus untuk Blue Team.
+
+curl -i http://172.20.4.2:9090/manager/html  dan  :80/manager/html
+→ HTTP/1.1 200 tapi isi = SPA ThingsBoard (catch-all), BUKAN Tomcat manager.
+→ Tomcat manager tidak ter-expose (dimask fallback SPA).
+
+nmap -Pn --script=http-methods,http-put -p 80,9090 172.20.4.2
+→ Supported Methods: GET HEAD OPTIONS saja. Tidak ada PUT/DELETE/TRACE → tidak bisa upload via HTTP method.
+
+=== BATCH B — UDP recon ===
+[kali attacker, 2026-11-26 12:26 +0700]
+
+sudo nmap -Pn -sU --top-ports 50 172.20.4.2
+→ All 50 scanned ports: open|filtered (no-response).
+→ Tidak ada service UDP yang ter-expose (DNS internal dsb. tidak buka ke attacker).
+
+=== BATCH D — DoS terkontrol (attempt 1 gagal) ===
+[kali attacker, 2026-11-26 12:28 +0700]
+
+sudo hping3 -S -p 9090 --flood-i u1000 172.20.4.2
+→ hping3: unrecognized option `--flood-i'   (flag salah — sintaks benar: --fast / -i u10000)
+
+curl -i --max-time 5 http://172.20.4.2:9090 (pasca attempt)
+→ HTTP/1.1 200 — service tetap hidup (memang belum ada paket flood terkirim).
+
+=== KESIMPULAN ===
+1. ★★ NO TLS: seluruh trafik dashboard (termasuk kredensial login) berjalan plaintext HTTP → temuan kategori C terkuat sejauh ini.
+2. ★ Swagger UI redirect ter-expose di :9090 — konfirmasi /swagger-ui/index.html berikutnya.
+3. Security headers inkonsisten: ADA di /api/* (nosniff + X-Frame-Options DENY), TIDAK ADA di static frontend → scope mitigasi Blue Team jelas: layer static.
+4. Tomcat manager tidak ter-expose. HTTP method terbatas GET/HEAD/OPTIONS. UDP tertutup.

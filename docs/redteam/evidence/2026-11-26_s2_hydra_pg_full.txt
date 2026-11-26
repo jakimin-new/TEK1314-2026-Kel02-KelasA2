@@ -1,0 +1,51 @@
+Brute-force PostgreSQL via Hydra — hasil dan analisis
+[kali attacker, 2026-11-26 13:23 +0700]
+
+Command: hydra -R (restore dari run sebelumnya, postgres://172.20.4.2:5432)
+Parameter run: 25000 login tries (5 user x 5000 pass rockyou-head), -t 4
+
+Hasil:
+  [ERROR] Child ... terminating, can not connect  (semua child)
+  [ERROR] all children were disabled due too many connection errors
+  0 of 1 target completed, 0 valid password found
+
+ANALISIS:
+- "can not connect" = Hydra TIDAK BISA membuka koneksi TCP sama sekali —
+  berbeda dengan auth-gagal (hydra akan lanjut ke percobaan berikutnya).
+- Run sebelumnya (restore file) kemungkinan sudah memicu proteksi:
+  kandidat kuat = fail2ban/rate-limit memblokir IP attacker, ATAU
+  firewall mulai DROP port 5432, ATAU pg max_connections kehabisan slot.
+- Kalau benar blokir aktif → itu temuan POSITIF: kontrol kategori A/B
+  (rate-limit percobaan login) terbukti bekerja secara empiris.
+- Verifikasi lanjutan: nmap -Pn -p 5432 --reason (open vs filtered)
+  dan psql manual 1x untuk melihat apakah masih menjawab auth-failed.
+
+KESIMPULAN SEMENTARA: kredensial PostgreSQL tidak tembus lewat brute-force;
+justru muncul indikasi proteksi aktif yang memutus serangan otomatis.
+
+VERIFIKASI 13:27:
+  sudo nmap -Pn -p 5432 --reason 172.20.4.2 → open (syn-ack ttl 62) — port HIDUP normal.
+  psql manual 1x → FATAL: password authentication failed for user "postgres".
+
+KESIMPULAN FINAL: port 5432 tetap open untuk koneksi manual dan auth tetap
+dijawab (password failed), tapi serangan otomatis Hydra diputus di level koneksi.
+Konsisten dengan rate-limit/fail2ban yang memblokir pola brute-force khusus.
+PostgreSQL = benteng: kredensial diganti + proteksi otomatis aktif.
+
+TAMBAHAN 13:27-13:30 (run lambat, -t 4 -W 2):
+  [STATUS] 59.00 tries/min, 24941 to do in 07:03h
+  → koneksi kini BERHASIL (blokir burst sudah lepas), tapi rate dibatasi ~1/detik
+    (hydra normal ratusan/detik) → proteksi bertipe THROTTLE:
+    burst cepat = diputus; lambat = diizinkan tapi dibatasi.
+  → estimasi 7 jam untuk 25000 percobaan; tidak efisien untuk lab.
+  Rekomendasi: hentikan; bila ingin tetap mencoba, scope kecil:
+    hydra -l postgres -P top100.txt -t 1 -W 1 postgres://172.20.4.2
+    (≈100 percobaan, beberapa menit).
+
+RUN PENUTUP 13:47-13:52 (hydra -l postgres -P top100.txt -t 1 -W 1):
+  100 percobaan (100 password terpopuler rockyou), rate ~20-23 tries/min
+  (throttle tetap aktif), selesai 4,5 menit.
+  HASIL: 1 of 1 target completed, 0 valid password found.
+→ Password postgres TIDAK berada di 100 password terpopuler dunia.
+→ S2 PostgreSQL DITUTUP: kredensial diganti + bukan password populer
+  + rate-limit throttle aktif. Benteng terkonfirmasi penuh.

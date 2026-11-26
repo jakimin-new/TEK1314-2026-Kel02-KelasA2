@@ -1,0 +1,38 @@
+nmap -Pn --script=pgsql-brute --script-args=userdb=users.txt,passdb=pass.txt -p 5432 172.20.4.2
+[kali attacker, 2026-11-26 12:13 +0700]
+
+Starting Nmap 7.991 ( https://nmap.org ) at 2026-11-26 12:13 +0700
+Nmap scan report for 172.20.4.2
+Host is up (0.11s latency).
+
+PORT     STATE SERVICE
+5432/tcp open  postgresql
+
+Nmap done: 1 IP address (1 host up) scanned in 7.28 seconds
+→ NSE pgsql-brute selesai TANPA kredensial valid ditemukan.
+
+===
+
+psql -h 172.20.4.2 -U postgres   (2x percobaan manual)
+[kali attacker, 2026-11-26]
+
+Password for user postgres:
+psql: error: connection to server at "172.20.4.2", port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+Password for user postgres:
+psql: error: connection to server at "172.20.4.2", port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+===
+
+curl http://172.20.4.2:9090/ | grep -i version
+[kali attacker, 2026-11-26]
+
+100  3776  100  3776    0     0  27481      0 --:--:-- --:--:-- --:--:-- 27562
+    Licensed under the Apache License, Version 2.0 (the "License");
+→ TIDAK ADA string versi aplikasi di halaman utama (hanya teks lisensi Apache).
+
+KESIMPULAN:
+1. Kredensial default PostgreSQL (postgres) SUDAH DIGANTI — auth gagal 2x, NSE tanpa temuan.
+   Kategori A (hapus kredensial default) terverifikasi di layer database.
+2. Versi ThingsBoard tidak bocor via halaman utama — perlu konfirmasi versi dari Blue Team
+   untuk mencocokkan CVE-2025-34281 (< 4.2.1).
