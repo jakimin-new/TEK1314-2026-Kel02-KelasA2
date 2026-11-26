@@ -1,42 +1,69 @@
-# Proyek Simulasi Jaringan - Cyber Range
+# Proyek Simulasi Jaringan — Cyber Range (Fase 1–3)
 
 ## Anggota Kelompok 2 Kelas A
-1. Dzaky Naufal Putra 
-Raditio (J0404241020) as Blue Team
-2. Siti Syafa Laela (J0404241053) as Lead
-3. Gde Saputra 
-Pramana Artha(J0404241107) as Blue Team
-4. Muhamad Arif Dermawan (J0404241134) as Red Team
+
+1. Dzaky Naufal Putra Raditio (J0404241020) — Blue Team
+2. Siti Syafa Laela (J0404241053) — Lead
+3. Gde Saputra Pramana Artha (J0404241107) — Blue Team
+4. Muhamad Arif Dermawan (J0404241134) — Red Team
 
 ## Deskripsi Skenario
 
-Skenario yang dipilih adalah **Web & Service Exploitation (DVWA + SSH Brute Force)**.
+Simulasi **SOC Engagement — mengamankan infrastruktur backend sistem IoT**. Target Node dibangun sebagai replika backend IoT berbasis **ThingsBoard 4.2.1.1** di atas Debian, PostgreSQL, dan HTTP/MQTT. Seluruh pengujian dilakukan hanya pada VM lab; sistem IoT asli mitra tidak disentuh.
 
-Skenario ini mensimulasikan proses eksploitasi terhadap sebuah target server yang berjalan di atas **Metasploitable 2**, dengan dua celah keamanan utama yang diuji:
+Topologi yang dipakai di seluruh artefak:
 
-- **Port 80/TCP (HTTP)** – Eksploitasi terhadap aplikasi web rentan **DVWA (Damn Vulnerable Web Application)**.
-- **Port 22/TCP (SSH)** – Pengujian keamanan melalui **weak password testing / brute force**.
+| Node | IP | Peran |
+|---|---|---|
+| Firewall | `172.20.4.1` | Intermediary / akses masuk |
+| Target Node | `172.20.4.2` | ThingsBoard, SSH `:2245`, PostgreSQL `:5432`, HTTP `:80`/`:9090` |
+| Monitoring Node | `172.20.4.3` | Security Onion |
+| Attacker Node | `172.20.4.4` | Kali Linux (Red Team) |
 
-**Alasan pemilihan OS:** Metasploitable 2 dipilih karena hemat penggunaan RAM dan sudah menyediakan service yang rentan secara bawaan (built-in), sehingga tidak memerlukan konfigurasi manual yang rumit untuk membangun environment pengujian.
+> Catatan: IP `192.168.2.x` dan skenario DVWA/Metasploitable pada README lama sudah tidak dipakai. `docs/design/ip_plan.md` sudah diperbarui. IP Tailscale `100.x` adalah jalur out-of-band dan tidak termasuk IP plan.
 
 ## Struktur Repositori
 
 ```
 docs/
-└── design/
-    ├── topology.png   # Desain jaringan (disusun oleh Blue Team)
-    └── ip_plan.md      # Tabel Hostname, IP Address, dan OS yang direncanakan
+├── design/
+│   ├── topology.png                  # desain awal Minggu 4 (dipertahankan)
+│   ├── ip_plan.md                    # sudah diselaraskan dengan 172.20.4.x
+│   └── README.md
+├── presentation-minggu9/
+│   ├── slides.pdf
+│   └── tech_stack_declaration.md
+├── presentation-final/
+│   └── README.md                     # slides.pdf masih disusun
+├── blueteam/
+│   ├── hardening_checklist.md        # 10 kontrol A/B/C + bukti di repo
+│   └── evidence/                     # screenshot before/after & deteksi
+├── redteam/
+│   ├── attack_plan.md
+│   ├── temuan-untuk-mitigasi.md
+│   └── evidence/                     # output serangan + cuplikan video
+├── purple-team-log.md                # log 5 tahap per skenario
+├── mitigasi/                         # bukti mitigasi per temuan
+└── final/
+    ├── incident_report.pdf           # DRAF — lihat STATUS.md
+    ├── video_demo.mp4                # rekaman attack.mp4 (230 MB)
+    └── STATUS.md
 README.md
 ```
 
+## Status Artefak Final
+
+| Artefak | Status |
+|---|---|
+| `docs/final/incident_report.pdf` | **DRAF** — masih ada bagian `[TEMPAT]`; lihat `docs/final/STATUS.md` |
+| `docs/final/video_demo.mp4` | Tersedia (rekaman asli, 5 menit 19 detik) |
+| `docs/presentation-final/slides.pdf` | Belum tersedia; sedang disusun |
+| `docs/purple-team-log.md` | Sudah dipindah ke path yang benar; sebagian verifikasi masih `[TEMPAT]` |
+
 ## Ringkasan Topologi
 
-Jaringan terbagi menjadi beberapa zona yang dipisahkan oleh firewall/router pada **Intermediary Zone**:
-
-- **Attacker Zone** – berisi node Kali Linux / CyberOps untuk melakukan serangan.
-- **DMZ Zone** – berisi target server (Web/DB) yang menjalankan Metasploitable 2.
-- **Internal Zone** – berisi server dan workstation internal.
-- **Monitoring Zone** – berisi Security Onion Node untuk memantau trafik.
-- **VPN Tunneling** – menghubungkan client ke Intermediary Zone secara aman.
-
-Detail pembagian IP Address untuk setiap node dapat dilihat pada [`docs/design/ip_plan.md`](docs/design/ip_plan.md).
+- **Attacker Zone** — `172.20.4.4`, menjalankan nmap, Hydra, Nikto, curl.
+- **Intermediary Zone** — firewall `172.20.4.1`.
+- **Target Zone** — `172.20.4.2`, replika ThingsBoard + PostgreSQL.
+- **Monitoring Zone** — `172.20.4.3`, Security Onion (Wireshark, Sguil, Kibana).
+- Semua trafik simulasi berada di `172.20.4.0/24`.
