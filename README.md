@@ -20,34 +20,30 @@ Topologi yang dipakai di seluruh artefak:
 | Monitoring Node | `172.20.4.3` | Security Onion |
 | Attacker Node | `172.20.4.4` | Kali Linux (Red Team) |
 
-> Catatan: IP `192.168.2.x` dan skenario DVWA/Metasploitable pada README lama sudah tidak dipakai. `docs/design/ip_plan.md` sudah diperbarui. IP Tailscale `100.x` adalah jalur out-of-band dan tidak termasuk IP plan.
-
 ## Struktur Repositori
 
 ```
 docs/
 ├── design/
-│   ├── topology.png                  # desain awal Minggu 4 (dipertahankan)
-│   ├── ip_plan.md                    # sudah diselaraskan dengan 172.20.4.x
+│   ├── topology.png
+│   ├── ip_plan.md
 │   └── README.md
 ├── presentation-minggu9/
 │   ├── slides.pdf
 │   └── tech_stack_declaration.md
 ├── presentation-final/
-│   └── README.md                     # slides.pdf masih disusun
+│   └── README.md
 ├── blueteam/
-│   ├── hardening_checklist.md        # 10 kontrol A/B/C + bukti di repo
-│   └── evidence/                     # screenshot before/after & deteksi
+│   ├── hardening_checklist.md
+│   └── evidence/
 ├── redteam/
 │   ├── attack_plan.md
 │   ├── temuan-untuk-mitigasi.md
-│   └── evidence/                     # output serangan + cuplikan video
-├── purple-team-log.md                # log 5 tahap per skenario
-├── mitigasi/                         # bukti mitigasi per temuan
+│   └── evidence/
+├── purple-team-log.md
+├── mitigasi/
 └── final/
-    ├── incident_report.pdf           # DRAF — lihat STATUS.md
-    ├── video_demo.mp4                # rekaman attack.mp4 (230 MB)
-    └── STATUS.md
+    └── incident_report.pdf
 README.md
 ```
 
@@ -55,10 +51,14 @@ README.md
 
 | Artefak | Status |
 |---|---|
-| `docs/final/incident_report.pdf` | **DRAF** — masih ada bagian `[TEMPAT]`; lihat `docs/final/STATUS.md` |
-| `docs/final/video_demo.mp4` | Tersedia (rekaman asli, 5 menit 19 detik) |
+| `docs/final/incident_report.pdf` | **DRAF** — masih ada bagian `[TEMPAT]` |
+| [Video demo (YouTube)](https://youtu.be/YBN12PQtgHE) | Tersedia — rekaman demo, 5 menit 19 detik |
 | `docs/presentation-final/slides.pdf` | Belum tersedia; sedang disusun |
 | `docs/purple-team-log.md` | Sudah dipindah ke path yang benar; sebagian verifikasi masih `[TEMPAT]` |
+
+## Video Demo
+
+https://youtu.be/YBN12PQtgHE
 
 ## Ringkasan Topologi
 
